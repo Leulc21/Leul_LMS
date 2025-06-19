@@ -63,7 +63,9 @@ export default function CheckEmailPage() {
                   onKeyDown={(e) =>
                     e.key === "Backspace" && handleBackspace(index)
                   }
-                  ref={(el) => (inputRefs.current[index] = el!)}
+                  ref={(el) => {
+                    inputRefs.current[index] = el!;
+                  }}
                   className="w-12 text-center text-lg font-mono"
                 />
               ))}
