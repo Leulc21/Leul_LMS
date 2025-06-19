@@ -12,11 +12,15 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { authClient } from "@/lib/auth-client";
 import { Github, Loader, Mail } from "lucide-react";
-import { useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 export function AuthFormUI() {
+  const router = useRouter();
   const [isGithubPending, startGithubTransition] = useTransition();
+  const [emailPending, startEmailTransition] = useTransition();
+  const [email, setEmail] = useState("");
   async function SigniInWithGithub() {
     startGithubTransition(async () => {
       const data = await authClient.signIn.social({
@@ -28,6 +32,23 @@ export function AuthFormUI() {
           },
           onError: (error) => {
             toast.error(`Error signing in with GitHub: ${error.error.message}`);
+          }, // Set to true if you want to redirect after sign-in
+        },
+      });
+    });
+  }
+  async function SignInWithEmail() {
+    startEmailTransition(async () => {
+      await authClient.emailOtp.sendVerificationOtp({
+        email: email,
+        type: "sign-in", // or "signup" based on your requirement
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("email sent successfully! Please check your inbox.");
+            router.push("/auth/check-email");
+          },
+          onError: (error) => {
+            toast.error(`Error signing in with Email: ${error.error.message}`);
           }, // Set to true if you want to redirect after sign-in
         },
       });
@@ -86,14 +107,31 @@ export function AuthFormUI() {
                 <div className="space-y-2">
                   <Label htmlFor="signin-email">Email</Label>
                   <Input
-                    id="signin-email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    id="signup-email"
                     type="email"
                     placeholder="Enter your email"
+                    required
                   />
                 </div>
-                <Button type="submit" className="w-full">
-                  <Mail className="mr-2 h-4 w-4" />
-                  Send magic link
+                <Button
+                  onClick={SignInWithEmail}
+                  type="submit"
+                  className="w-full"
+                  disabled={emailPending}
+                >
+                  {emailPending ? (
+                    <>
+                      <Loader className="mr-2 h-4 w-4 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="mr-2 h-4 w-4" />
+                      Continue with Email
+                    </>
+                  )}
                 </Button>
               </form>
             </TabsContent>
@@ -103,14 +141,31 @@ export function AuthFormUI() {
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
                   <Input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     id="signup-email"
                     type="email"
                     placeholder="Enter your email"
+                    required
                   />
                 </div>
-                <Button type="submit" className="w-full">
-                  <Mail className="mr-2 h-4 w-4" />
-                  Create account
+                <Button
+                  onClick={SignInWithEmail}
+                  type="submit"
+                  className="w-full"
+                  disabled={emailPending}
+                >
+                  {emailPending ? (
+                    <>
+                      <Loader className="mr-2 h-4 w-4 animate-spin" />
+                      Signing up...
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="mr-2 h-4 w-4" />
+                      Sign Up with Email
+                    </>
+                  )}
                 </Button>
               </form>
             </TabsContent>
