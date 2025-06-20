@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 export default function Home() {
   const [isSignOutPending, startSignOutTransition] = useTransition();
+  const [isSignInPending, startSignInTransition] = useTransition();
   const router = useRouter();
   const { data: session } = authClient.useSession();
 
@@ -21,6 +22,11 @@ export default function Home() {
           },
         },
       });
+    });
+  }
+  async function SignIn() {
+    startSignInTransition(async () => {
+      router.push("/auth");
     });
   }
   return (
@@ -50,12 +56,17 @@ export default function Home() {
       ) : (
         <div className="flex justify-between px-4 py-8">
           <p className="text-center text-2xl font-bold">Welcome to the LMS!</p>{" "}
-          <Button
-            onClick={() => {
-              router.push("/auth");
-            }}
-          >
-            Sign In
+          <Button disabled={isSignInPending} onClick={SignIn}>
+            {isSignInPending ? (
+              <>
+                <Loader className="mr-2 h-4 w-4 animate-spin" /> Signing in...
+              </>
+            ) : (
+              <>
+                <span className=" pl-4 h-4 w-4" />
+                Sign In
+              </>
+            )}
           </Button>
         </div>
       )}

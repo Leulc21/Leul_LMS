@@ -45,7 +45,7 @@ export function AuthFormUI() {
         fetchOptions: {
           onSuccess: () => {
             toast.success("email sent successfully! Please check your inbox.");
-            router.push("/auth/check-email");
+            router.push("/auth/check-email?email=" + encodeURIComponent(email));
           },
           onError: (error) => {
             toast.error(`Error signing in with Email: ${error.error.message}`);

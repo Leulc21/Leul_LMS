@@ -3,12 +3,20 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useRef, useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useRef, useState, useTransition } from "react";
+import { toast } from "sonner";
 
 export default function CheckEmailPage() {
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") || "your email";
+  const router = useRouter();
+
   const length = 6;
   const [otp, setOtp] = useState(Array(length).fill(""));
   const inputRefs = useRef<HTMLInputElement[]>([]);
+  const [isOtpPending, startOtpTransition] = useTransition();
 
   const handleChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
@@ -28,11 +36,24 @@ export default function CheckEmailPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const fullOtp = otp.join("");
-    console.log("Submitted OTP:", fullOtp);
-    // call your API here
+  const handleSubmit = async (e: React.FormEvent) => {
+    startOtpTransition(async () => {
+      e.preventDefault();
+      const fullOtp = otp.join("");
+      await authClient.signIn.emailOtp({
+        email: email,
+        otp: fullOtp,
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("OTP verified successfully! Redirecting...");
+            router.push("/");
+          },
+          onError: (error) => {
+            toast.error(`Error verifying OTP: ${error.error.message}`);
+          },
+        },
+      });
+    });
   };
 
   return (
@@ -41,7 +62,8 @@ export default function CheckEmailPage() {
         <CardHeader>
           <CardTitle className="text-center">Please Check Your Email</CardTitle>
           <p className="text-sm text-muted-foreground text-center mt-2">
-            We have sent a verification code to your email. Copy and paste the
+            We have sent a verification code to{" "}
+            <span className="font-medium">{email}</span>. Copy and paste the
             code below to continue.
           </p>
         </CardHeader>
@@ -71,12 +93,14 @@ export default function CheckEmailPage() {
               ))}
             </div>
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={otp.includes("")}
-            >
-              Continue
+            <Button type="submit" className="w-full" disabled={isOtpPending}>
+              {isOtpPending ? (
+                <>
+                  <span className="loader mr-2" /> Verifying...
+                </>
+              ) : (
+                "Continue"
+              )}
             </Button>
 
             <p className="text-xs text-muted-foreground text-center px-2">
