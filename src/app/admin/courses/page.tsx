@@ -37,14 +37,59 @@ const Courses = () => {
       level: "INTERMEDIATE",
       students: 28,
     },
+    {
+      id: "4",
+      title: "Full-Stack Web Development",
+      smallDescription:
+        "Build powerful web applications using modern tools like React, Node.js, and PostgreSQL.",
+      duration: 14,
+      level: "ADVANCED",
+      students: 50,
+    },
+    {
+      id: "5",
+      title: "Python for Data Science",
+      smallDescription:
+        "Analyze data, build models, and visualize results using Python and popular libraries like Pandas and Matplotlib.",
+      duration: 10,
+      level: "BEGINNER",
+      students: 67,
+    },
+    {
+      id: "6",
+      title: "TypeScript with React",
+      smallDescription:
+        "Level up your React apps with the power and safety of TypeScript.",
+      duration: 8,
+      level: "INTERMEDIATE",
+      students: 41,
+    },
+    {
+      id: "7",
+      title: "API Design with REST & GraphQL",
+      smallDescription:
+        "Design scalable APIs using REST and GraphQL best practices and tools.",
+      duration: 9,
+      level: "ADVANCED",
+      students: 33,
+    },
+    {
+      id: "8",
+      title: "Introduction to Cloud Computing",
+      smallDescription:
+        "Understand the basics of cloud services, deployments, and architectures using AWS and other platforms.",
+      duration: 7,
+      level: "BEGINNER",
+      students: 58,
+    },
   ];
 
   const handleCreateCourse = () => {
-    router.push("/dashboard/courses/create"); // Adjust route as needed
+    router.push("/admin/courses/createCourse"); // Adjust route as needed
   };
 
   return (
-    <div className="min-h-screen bg-background container py-8">
+    <div className="min-h-screen bg-background container py-8 px-6">
       {/* Page Title */}
       <div className="mb-6 flex items-center justify-between">
         <div>
