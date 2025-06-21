@@ -2,15 +2,11 @@
 import { ModeToggle } from "@/components/theme_toggle";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Notification from "./notification";
 import UserDropdown from "./userDropdown";
 
 function navbar() {
-  const router = useRouter();
-
-  function SignIn() {
-    router.push("/auth");
-  }
   const { data: session, isPending } = authClient.useSession();
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -53,6 +49,7 @@ function navbar() {
           <ModeToggle />
           {isPending ? null : session ? (
             <div>
+              <Notification />
               <UserDropdown
                 name={session.user.name}
                 email={session.user.email}
@@ -61,9 +58,11 @@ function navbar() {
             </div>
           ) : (
             <>
-              <Button variant="ghost" size="sm" onClick={SignIn}>
-                Log In
-              </Button>
+              <Link href="/auth">
+                <Button variant="ghost" size="sm">
+                  Log In
+                </Button>
+              </Link>
               <Button size="sm">Start Free Trial</Button>
             </>
           )}

@@ -1,3 +1,4 @@
+import Notification from "@/app/(public)/_components/notification";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ModeToggle } from "../theme_toggle";
@@ -13,6 +14,7 @@ export function SiteHeader() {
         />
         <h1 className="text-base font-medium">Leul LMS.</h1>
         <div className="ml-auto flex items-center gap-2">
+          <Notification />
           <ModeToggle />
         </div>
       </div>
