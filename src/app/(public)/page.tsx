@@ -6,26 +6,12 @@ import { authClient } from "@/lib/auth-client";
 import { Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { toast } from "sonner";
 
 export default function Home() {
   const [isSignOutPending, startSignOutTransition] = useTransition();
   const [isSignInPending, startSignInTransition] = useTransition();
   const router = useRouter();
   const { data: session } = authClient.useSession();
-
-  async function SignOut() {
-    startSignOutTransition(async () => {
-      await authClient.signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            router.push("/");
-            toast.success("Signed out successfully!");
-          },
-        },
-      });
-    });
-  }
 
   return (
     <section className="relative overflow-hidden bg-background py-20 sm:py-32">
