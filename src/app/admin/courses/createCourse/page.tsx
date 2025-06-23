@@ -23,8 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 
+import RichTextEditor from "@/components/Editor/rich_text";
 import { createCourseSchema } from "@/lib/createCourseSchema";
 import { SparkleIcon } from "lucide-react";
 
@@ -132,10 +132,14 @@ export default function CreateCoursePage() {
               <FormItem>
                 <FormLabel>Full Description</FormLabel>
                 <FormControl>
-                  <Textarea
+                  {/* <Textarea
                     rows={5}
                     {...field}
                     placeholder="Detailed course description..."
+                  /> */}
+                  <RichTextEditor
+                    content={field.value}
+                    onChange={(content) => field.onChange(content)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -172,33 +176,63 @@ export default function CreateCoursePage() {
               </FormItem>
             )}
           />
+          <div className="flex flex-row items-end">
+            {/* Level Select - takes full width on mobile, half on md+ */}
 
-          {/* Level */}
-          <FormField
-            control={form.control}
-            name="level"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Level</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Level" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="BEGINNER">Beginner</SelectItem>
-                    <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
-                    <SelectItem value="ADVANCED">Advanced</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="level"
+              render={({ field }) => (
+                <FormItem className="w-1/2">
+                  <FormLabel>Level</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Level" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="BEGINNER">Beginner</SelectItem>
+                      <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
+                      <SelectItem value="ADVANCED">Advanced</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Status Select - takes full width on mobile, half on md+ */}
+
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="DRAFT">Draft</SelectItem>
+                      <SelectItem value="PUBLISHED">Published</SelectItem>
+                      <SelectItem value="ARCHIVED">Archived</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* Duration & Price */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -229,33 +263,6 @@ export default function CreateCoursePage() {
               )}
             />
           </div>
-
-          {/* Status */}
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="DRAFT">Draft</SelectItem>
-                    <SelectItem value="PUBLISHED">Published</SelectItem>
-                    <SelectItem value="ARCHIVED">Archived</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
           {/* Submit */}
           <Button type="submit" className="w-full">
