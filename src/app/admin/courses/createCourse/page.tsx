@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 
 import RichTextEditor from "@/components/Editor/rich_text";
+import Uploader from "@/components/File_Uploader/Uploader";
 import { createCourseSchema } from "@/lib/createCourseSchema";
 import { SparkleIcon } from "lucide-react";
 
@@ -132,11 +133,6 @@ export default function CreateCoursePage() {
               <FormItem>
                 <FormLabel>Full Description</FormLabel>
                 <FormControl>
-                  {/* <Textarea
-                    rows={5}
-                    {...field}
-                    placeholder="Detailed course description..."
-                  /> */}
                   <RichTextEditor
                     content={field.value}
                     onChange={(content) => field.onChange(content)}
@@ -155,7 +151,8 @@ export default function CreateCoursePage() {
               <FormItem>
                 <FormLabel>Thumbnail URL / File Key</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="e.g. thumbnails/react.png" />
+                  {/* <Input {...field} placeholder="e.g. thumbnails/react.png" /> */}
+                  <Uploader />
                 </FormControl>
                 <FormMessage />
               </FormItem>
